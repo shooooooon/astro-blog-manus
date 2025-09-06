@@ -136,9 +136,16 @@ export const getAbout = async (queries?: any) => {
   if (!client) {
     throw new Error('microCMSクライアントが初期化されていません');
   }
-  const response = await client.getObject({
-    endpoint: 'about',
-    queries,
-  });
-  return response;
+  try {
+    const response = await client.get({
+      endpoint: 'about',
+      queries,
+    });
+    console.log('About API response:', response);
+    // リスト形式のAPIなので、最初のアイテムを返す
+    return response.contents?.[0] || null;
+  } catch (error) {
+    console.error('About API error:', error);
+    throw error;
+  }
 };

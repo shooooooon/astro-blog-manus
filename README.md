@@ -60,24 +60,50 @@ All commands are run from the root of the project, from a terminal:
 
 ### Setup
 
-1. `.env.example`を`.env`にコピーしてください
+1. `.env.example`を`.env.local`にコピーしてください
 2. microCMSのサービスドメインとAPIキーを設定してください：
 
 ```
-MICROCMS_SERVICE_DOMAIN=your-service-domain
-MICROCMS_API_KEY=your-api-key
+PUBLIC_MICROCMS_SERVICE_DOMAIN=your-service-domain
+PUBLIC_MICROCMS_API_KEY=your-api-key
+PUBLIC_SITE_URL=https://your-domain.pages.dev
 ```
 
 ### Usage
 
-- `/cms-blog/` - microCMSで管理されているブログ記事一覧
+- `/` - microCMSで管理されているブログ記事一覧
+- `/categories/` - カテゴリ一覧
+- `/search` - 記事検索
+- `/about` - Aboutページ（microCMS管理）
 - `src/lib/microcms.ts` - microCMS連携用のライブラリ
 
-microCMSでは`blogs`というエンドポイントを作成し、以下のフィールドを設定してください：
+### microCMS API設定
+
+以下のAPIエンドポイントを作成してください：
+
+#### blogs API（リスト形式）
 - title (テキスト)
 - content (リッチエディタ)
 - eyecatch (画像・任意)
 - category (参照・任意)
+
+#### categories API（リスト形式）
+- name (テキスト)
+- description (テキスト・任意)
+
+#### about API（リスト形式）
+- title (テキスト)
+- content (リッチエディタ)
+
+#### news API（リスト形式）
+- title (テキスト)
+- content (リッチエディタ)
+- publishedAt (日時)
+
+#### banners API（リスト形式）
+- title (テキスト)
+- image (画像)
+- link (テキスト・任意)
 
 ## 👀 Want to learn more?
 

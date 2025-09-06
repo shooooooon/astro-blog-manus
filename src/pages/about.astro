@@ -10,6 +10,7 @@ let errorMessage = "";
 try {
   if (typeof getAbout === "function") {
     aboutData = await getAbout();
+    console.log("About data:", aboutData);
   } else {
     throw new Error("getAbout function is not available");
   }
@@ -178,7 +179,7 @@ try {
     <Header />
     <main>
       {
-        aboutData ? (
+        aboutData && aboutData.title ? (
           <article class="about">
             <h1 class="about-title">{aboutData.title}</h1>
             <div class="about-content" set:html={aboutData.content} />
@@ -188,7 +189,8 @@ try {
             <h1 class="about-title">Shooonについて</h1>
             <div class="error-message">
               <p>Aboutページの読み込みに失敗しました。</p>
-              <p>{errorMessage}</p>
+              <p>データ: {JSON.stringify(aboutData)}</p>
+              <p>エラー: {errorMessage}</p>
             </div>
           </div>
         )

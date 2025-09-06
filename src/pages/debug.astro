@@ -25,18 +25,34 @@ try {
 
     for (const api of apis) {
       try {
-        const response = await client.get({
-          endpoint: api,
-          queries: { limit: 1 },
-        });
-        apiInfo.apis.push({
-          name: api,
-          status: "OK",
-          totalCount: response.totalCount || 0,
-          fields: response.contents?.[0]
-            ? Object.keys(response.contents[0])
-            : [],
-        });
+        let response;
+        if (api === "about") {
+          // About APIはオブジェクト形式なのでgetObjectを使用
+          response = await client.getObject({
+            endpoint: api,
+            queries: {},
+          });
+          apiInfo.apis.push({
+            name: api,
+            status: "OK",
+            totalCount: response ? 1 : 0,
+            fields: response ? Object.keys(response) : [],
+          });
+        } else {
+          // その他のAPIはリスト形式なのでgetを使用
+          response = await client.get({
+            endpoint: api,
+            queries: { limit: 1 },
+          });
+          apiInfo.apis.push({
+            name: api,
+            status: "OK",
+            totalCount: response.totalCount || 0,
+            fields: response.contents?.[0]
+              ? Object.keys(response.contents[0])
+              : [],
+          });
+        }
       } catch (error) {
         apiInfo.apis.push({
           name: api,
