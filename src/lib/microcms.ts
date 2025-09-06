@@ -36,6 +36,39 @@ export type Blog = {
   };
 };
 
+// お知らせの型定義
+export type News = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  revisedAt: string;
+  title: string;
+  content: string;
+  eyecatch?: {
+    url: string;
+    height: number;
+    width: number;
+  };
+};
+
+// バナーの型定義
+export type Banner = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  revisedAt: string;
+  title: string;
+  image: {
+    url: string;
+    height: number;
+    width: number;
+  };
+  link?: string;
+  isActive: boolean;
+};
+
 // ブログ記事一覧の取得
 export const getBlogs = async (queries?: any) => {
   if (!client) {
@@ -56,6 +89,55 @@ export const getBlogDetail = async (contentId: string, queries?: any) => {
   const response = await client.getListDetail({
     endpoint: 'blogs',
     contentId,
+    queries,
+  });
+  return response;
+};
+
+// お知らせ一覧の取得
+export const getNews = async (queries?: any) => {
+  if (!client) {
+    throw new Error('microCMSクライアントが初期化されていません');
+  }
+  const response = await client.get({
+    endpoint: 'news',
+    queries,
+  });
+  return response;
+};
+
+// お知らせの詳細取得
+export const getNewsDetail = async (contentId: string, queries?: any) => {
+  if (!client) {
+    throw new Error('microCMSクライアントが初期化されていません');
+  }
+  const response = await client.getListDetail({
+    endpoint: 'news',
+    contentId,
+    queries,
+  });
+  return response;
+};
+
+// バナー一覧の取得
+export const getBanners = async (queries?: any) => {
+  if (!client) {
+    throw new Error('microCMSクライアントが初期化されていません');
+  }
+  const response = await client.get({
+    endpoint: 'banners',
+    queries,
+  });
+  return response;
+};
+
+// Aboutページの取得
+export const getAbout = async (queries?: any) => {
+  if (!client) {
+    throw new Error('microCMSクライアントが初期化されていません');
+  }
+  const response = await client.getObject({
+    endpoint: 'about',
     queries,
   });
   return response;

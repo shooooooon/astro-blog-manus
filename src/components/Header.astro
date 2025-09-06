@@ -1,63 +1,100 @@
 ---
-import { SITE_TITLE } from '../consts';
-import HeaderLink from './HeaderLink.astro';
+import { SITE_TITLE } from "../consts";
+import HeaderLink from "./HeaderLink.astro";
 ---
 
 <header>
-	<nav>
-		<h2 style="text-align: center; width: 100%;"><a href="/">{SITE_TITLE}</a></h2>
-		<div class="internal-links" style="display: flex; justify-content: center; width: 100%;">
-			<HeaderLink href="/cms-blog">ブログ</HeaderLink>
-			<HeaderLink href="/about">このブログについて</HeaderLink>
-		</div>
-	</nav>
+  <div class="container">
+    <nav>
+      <div class="logo">
+        <a href="/" class="site-title">{SITE_TITLE}</a>
+      </div>
+      <div class="nav-links">
+        <HeaderLink href="/">ブログ</HeaderLink>
+        <HeaderLink href="/categories/">カテゴリ</HeaderLink>
+        <HeaderLink href="/search">検索</HeaderLink>
+        <HeaderLink href="/about">Shooonについて</HeaderLink>
+      </div>
+    </nav>
+  </div>
 </header>
 <style>
-	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
-	}
-	h2 {
-		margin: 0;
-		font-size: 1.5em; /* タイトルを少し大きく */
-	}
+  header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
-		color: rgb(var(--black)); /* タイトルの色を黒に */
-	}
-	nav {
-		display: flex;
-		flex-direction: column; /* 縦並びにする */
-		align-items: center;
-		justify-content: center; /* 中央揃え */
-		padding: 1em 0;
-	}
-	nav a {
-		padding: 0.5em 1em; /* パディングを調整 */
-		color: var(--accent); /* ナビゲーションリンクの色をアクセントカラーに */
-		text-decoration: none;
-		border-bottom: none; /* 下線を削除 */
-	}
-	nav a.active {
-		color: var(--accent-dark); /* アクティブ時の色 */
-	}
-	.internal-links {
-		margin-top: 1em; /* タイトルとナビゲーションの間に余白 */
-	}
-	@media (max-width: 720px) {
-		nav {
-			padding: 0.5em 0;
-		}
-		h2 {
-			font-size: 1.2em;
-		}
-			.internal-links {
-				margin-top: 0.5em;
-			}
-		}
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+  }
+
+  .site-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    transition: color 0.2s ease;
+  }
+
+  .site-title:hover {
+    color: #4f46e5;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .nav-links :global(a) {
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .nav-links :global(a):hover {
+    color: #1a1a1a;
+  }
+
+  .nav-links :global(a.active) {
+    color: #4f46e5;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 1rem;
+    }
+
+    nav {
+      height: 60px;
+    }
+
+    .site-title {
+      font-size: 1.25rem;
+    }
+
+    .nav-links {
+      gap: 1.5rem;
+    }
+
+    .nav-links :global(a) {
+      font-size: 0.9rem;
+    }
+  }
 </style>
-

@@ -1,12 +1,12 @@
 ---
-import { getBlogDetail, getBlogs, client, type Blog } from '../../lib/microcms';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import Header from '../../components/Header.astro';
+import BaseHead from "../../components/BaseHead.astro";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { client, getBlogDetail, getBlogs, type Blog } from "../../lib/microcms";
 
 export async function getStaticPaths() {
   if (!client) return [];
-  
+
   const response = await getBlogs();
   return response.contents.map((post: Blog) => ({
     params: { id: post.id },
@@ -22,7 +22,7 @@ if (!blogPost && client) {
   try {
     blogPost = await getBlogDetail(id as string);
   } catch (error) {
-    console.error('記事の取得に失敗しました:', error);
+    console.error("記事の取得に失敗しました:", error);
   }
 }
 ---
@@ -30,14 +30,17 @@ if (!blogPost && client) {
 <!doctype html>
 <html lang="ja">
   <head>
-    <BaseHead title={blogPost?.title || 'Not Found'} description={blogPost?.title || ''} />
+    <BaseHead
+      title={blogPost?.title || "Not Found"}
+      description={blogPost?.title || ""}
+    />
     <style>
       body {
         background-color: #fafafa;
         color: #1a1a1a;
         line-height: 1.7;
       }
-      
+
       .article {
         max-width: 800px;
         margin: 0 auto;
@@ -48,13 +51,13 @@ if (!blogPost && client) {
         border-radius: 12px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
       }
-      
+
       .article-header {
         margin-bottom: 3rem;
         padding-bottom: 2rem;
         border-bottom: 1px solid rgba(0, 0, 0, 0.08);
       }
-      
+
       .article-title {
         font-size: 2.5rem;
         font-weight: 800;
@@ -63,7 +66,7 @@ if (!blogPost && client) {
         line-height: 1.2;
         letter-spacing: -0.02em;
       }
-      
+
       .article-meta {
         display: flex;
         align-items: center;
@@ -73,11 +76,11 @@ if (!blogPost && client) {
         margin-bottom: 2rem;
         font-weight: 500;
       }
-      
+
       .article-date {
         color: #64748b;
       }
-      
+
       .category {
         background: #4f46e5;
         color: white;
@@ -88,7 +91,7 @@ if (!blogPost && client) {
         text-transform: uppercase;
         letter-spacing: 0.05em;
       }
-      
+
       .article-eyecatch {
         width: 100%;
         height: 400px;
@@ -97,44 +100,44 @@ if (!blogPost && client) {
         margin-bottom: 2rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
-      
+
       .article-content {
         line-height: 1.8;
         color: #374151;
         font-size: 1.1rem;
       }
-      
-      .article-content h1 { 
-        font-size: 2.2rem; 
+
+      .article-content h1 {
+        font-size: 2.2rem;
         font-weight: 700;
-        margin: 3rem 0 1.5rem; 
+        margin: 3rem 0 1.5rem;
         color: #1a1a1a;
         line-height: 1.3;
         letter-spacing: -0.01em;
         border-bottom: 2px solid #f3f4f6;
         padding-bottom: 0.5rem;
       }
-      
-      .article-content h2 { 
-        font-size: 1.8rem; 
+
+      .article-content h2 {
+        font-size: 1.8rem;
         font-weight: 600;
-        margin: 2.5rem 0 1.2rem; 
+        margin: 2.5rem 0 1.2rem;
         color: #1a1a1a;
         line-height: 1.3;
       }
-      
-      .article-content h3 { 
-        font-size: 1.4rem; 
+
+      .article-content h3 {
+        font-size: 1.4rem;
         font-weight: 600;
-        margin: 2rem 0 1rem; 
+        margin: 2rem 0 1rem;
         color: #1a1a1a;
       }
-      
-      .article-content p { 
-        margin: 1.5rem 0; 
+
+      .article-content p {
+        margin: 1.5rem 0;
         line-height: 1.8;
       }
-      
+
       .article-content blockquote {
         border-left: 4px solid #4f46e5;
         background: #f8fafc;
@@ -144,16 +147,16 @@ if (!blogPost && client) {
         font-style: italic;
         color: #475569;
       }
-      
+
       .article-content code {
         background: #f1f5f9;
         padding: 0.2rem 0.4rem;
         border-radius: 4px;
-        font-family: 'Monaco', 'Courier New', monospace;
+        font-family: "Monaco", "Courier New", monospace;
         font-size: 0.9em;
         color: #475569;
       }
-      
+
       .article-content pre {
         background: #1e293b;
         color: #e2e8f0;
@@ -162,17 +165,18 @@ if (!blogPost && client) {
         overflow-x: auto;
         margin: 2rem 0;
       }
-      
-      .article-content ul, .article-content ol {
+
+      .article-content ul,
+      .article-content ol {
         margin: 1.5rem 0;
         padding-left: 2rem;
       }
-      
+
       .article-content li {
         margin: 0.5rem 0;
         line-height: 1.7;
       }
-      
+
       .article-content img {
         max-width: 100%;
         height: auto;
@@ -180,14 +184,14 @@ if (!blogPost && client) {
         margin: 2rem 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
-      
+
       .back-to-list {
         text-align: center;
         margin-top: 3rem;
         padding-top: 2rem;
         border-top: 1px solid rgba(0, 0, 0, 0.08);
       }
-      
+
       .back-to-list a {
         color: #4f46e5;
         text-decoration: none;
@@ -197,11 +201,11 @@ if (!blogPost && client) {
         align-items: center;
         gap: 0.5rem;
       }
-      
+
       .back-to-list a:hover {
         color: #3730a3;
       }
-      
+
       .not-found {
         text-align: center;
         padding: 4rem 2rem;
@@ -212,63 +216,63 @@ if (!blogPost && client) {
         margin-top: 2rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
       }
-      
+
       .not-found h1 {
         color: #1a1a1a;
         font-size: 2rem;
         margin-bottom: 1rem;
       }
-      
+
       .not-found p {
         color: #64748b;
         margin-bottom: 2rem;
       }
-      
+
       .not-found a {
         color: #4f46e5;
         text-decoration: none;
         font-weight: 600;
       }
-      
+
       .not-found a:hover {
         color: #3730a3;
       }
-      
+
       @media (max-width: 768px) {
         .article {
           margin: 1rem;
           padding: 2rem 1.5rem;
           border-radius: 8px;
         }
-        
+
         .article-title {
           font-size: 2rem;
           margin-bottom: 1rem;
         }
-        
+
         .article-eyecatch {
           height: 250px;
           border-radius: 8px;
         }
-        
+
         .article-content {
           font-size: 1rem;
         }
-        
-        .article-content h1 { 
-          font-size: 1.8rem; 
+
+        .article-content h1 {
+          font-size: 1.8rem;
           margin: 2rem 0 1rem;
         }
-        
-        .article-content h2 { 
-          font-size: 1.5rem; 
+
+        .article-content h2 {
+          font-size: 1.5rem;
           margin: 1.5rem 0 1rem;
         }
-        
-        .article-content h3 { 
-          font-size: 1.25rem; 
+
+        .article-content h3 {
+          font-size: 1.25rem;
         }
-        
+
         .not-found {
           margin: 1rem;
           padding: 3rem 1.5rem;
@@ -279,42 +283,44 @@ if (!blogPost && client) {
   <body>
     <Header />
     <main>
-      {blogPost ? (
-        <article class="article">
-          <div class="article-header">
-            <h1 class="article-title">{blogPost.title}</h1>
-            <div class="article-meta">
-              <time class="article-date">
-                {new Date(blogPost.publishedAt).toLocaleDateString('ja-JP', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </time>
-              {blogPost.category && (
-                <span class="category">{blogPost.category.name}</span>
+      {
+        blogPost ? (
+          <article class="article">
+            <div class="article-header">
+              <h1 class="article-title">{blogPost.title}</h1>
+              <div class="article-meta">
+                <time class="article-date">
+                  {new Date(blogPost.publishedAt).toLocaleDateString("ja-JP", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                {blogPost.category && (
+                  <span class="category">{blogPost.category.name}</span>
+                )}
+              </div>
+              {blogPost.eyecatch && (
+                <img
+                  src={blogPost.eyecatch.url}
+                  alt={blogPost.title}
+                  class="article-eyecatch"
+                />
               )}
             </div>
-            {blogPost.eyecatch && (
-              <img 
-                src={blogPost.eyecatch.url} 
-                alt={blogPost.title}
-                class="article-eyecatch"
-              />
-            )}
+            <div class="article-content" set:html={blogPost.content} />
+            <div class="back-to-list">
+              <a href="/">← ブログ一覧に戻る</a>
+            </div>
+          </article>
+        ) : (
+          <div class="not-found">
+            <h1>記事が見つかりません</h1>
+            <p>お探しの記事は存在しないか、削除された可能性があります。</p>
+            <a href="/">← ブログ一覧に戻る</a>
           </div>
-          <div class="article-content" set:html={blogPost.content} />
-          <div class="back-to-list">
-            <a href="/cms-blog/">← ブログ一覧に戻る</a>
-          </div>
-        </article>
-      ) : (
-        <div class="not-found">
-          <h1>記事が見つかりません</h1>
-          <p>お探しの記事は存在しないか、削除された可能性があります。</p>
-          <a href="/cms-blog/">← ブログ一覧に戻る</a>
-        </div>
-      )}
+        )
+      }
     </main>
     <Footer />
   </body>

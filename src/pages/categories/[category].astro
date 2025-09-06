@@ -5,8 +5,27 @@ import Header from "../../components/Header.astro";
 import { SITE_TITLE } from "../../consts";
 import { client, getBlogs, type Blog } from "../../lib/microcms";
 
+export async function getStaticPaths() {
+  if (!client) return [];
+
+  const response = await getBlogs();
+  const categories = new Set<string>();
+
+  response.contents.forEach((post: Blog) => {
+    if (post.category) {
+      categories.add(post.category.name);
+    }
+  });
+
+  return Array.from(categories).map((category) => ({
+    params: { category },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.params;
 let posts: Blog[] = [];
-let errorMessage = "";
+let categoryPosts: Blog[] = [];
 
 try {
   if (!client) {
@@ -16,9 +35,13 @@ try {
   }
   const response = await getBlogs();
   posts = response.contents;
+
+  // 指定されたカテゴリの記事をフィルタリング
+  categoryPosts = posts.filter(
+    (post) => post.category && post.category.name === category
+  );
 } catch (error) {
   console.error("microCMSからのデータ取得に失敗しました:", error);
-  errorMessage = error instanceof Error ? error.message : "Unknown error";
 }
 ---
 
@@ -26,8 +49,8 @@ try {
 <html lang="ja">
   <head>
     <BaseHead
-      title={`ブログ | ${SITE_TITLE}`}
-      description="Shooonのブログ記事一覧"
+      title={`${category} | ${SITE_TITLE}`}
+      description={`${category}カテゴリの記事一覧`}
     />
     <style>
       body {
@@ -46,9 +69,16 @@ try {
         font-size: 2.5rem;
         font-weight: 800;
         color: #1a1a1a;
-        margin-bottom: 3rem;
+        margin-bottom: 1rem;
         text-align: center;
         letter-spacing: -0.02em;
+      }
+
+      .category-info {
+        text-align: center;
+        color: #64748b;
+        margin-bottom: 3rem;
+        font-size: 1.1rem;
       }
 
       .posts-list {
@@ -109,6 +139,17 @@ try {
         font-weight: 500;
       }
 
+      .post-category {
+        background: #4f46e5;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
       .post-excerpt {
         color: #4b5563;
         line-height: 1.7;
@@ -130,6 +171,27 @@ try {
         margin: 0;
       }
 
+      .back-to-categories {
+        text-align: center;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      .back-to-categories a {
+        color: #4f46e5;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .back-to-categories a:hover {
+        color: #3730a3;
+      }
+
       @media (max-width: 768px) {
         main {
           padding: 2rem 1rem;
@@ -137,7 +199,7 @@ try {
 
         .page-title {
           font-size: 2rem;
-          margin-bottom: 2rem;
+          margin-bottom: 1rem;
         }
 
         .posts-list {
@@ -161,16 +223,19 @@ try {
   <body>
     <Header />
     <main>
-      <h1 class="page-title">ブログ</h1>
+      <h1 class="page-title">{category}</h1>
+      <div class="category-info">
+        {categoryPosts.length}件の記事
+      </div>
 
       {
-        posts.length === 0 ? (
+        categoryPosts.length === 0 ? (
           <div class="no-posts">
-            <p>記事を準備中です。しばらくお待ちください。</p>
+            <p>このカテゴリには記事がありません。</p>
           </div>
         ) : (
           <div class="posts-list">
-            {posts.map((post) => (
+            {categoryPosts.map((post) => (
               <article class="post-card">
                 <a href={`/blog/${post.id}`}>
                   {post.eyecatch && (
@@ -210,6 +275,10 @@ try {
           </div>
         )
       }
+
+      <div class="back-to-categories">
+        <a href="/categories/">← カテゴリ一覧に戻る</a>
+      </div>
     </main>
     <Footer />
   </body>
