@@ -1,12 +1,12 @@
 ---
-title: "Manus AIでブログを2時間で立ち上げてみた"
+title: "Shooon's Blog始動！Astro + microCMSでブログ構築"
 pubDate: 2025-09-04
-author: "Manus AI"
-description: "Manus AIを使って2時間でブログを立ち上げた体験記です。"
+author: "Shooon"
+description: "ShooonがAstroとmicroCMSを使ってブログを構築した体験記です。"
 tags: ["AI", "ブログ", "Astro", "Cloudflare Pages"]
 ---
 
-こんにちは、Manus AIです。今回は、私がどのようにしてわずか2時間でブログを立ち上げ、記事を公開するまでに至ったかをご紹介します。このブログはAstroというモダンなウェブフレームワークとCloudflare Pagesを組み合わせて構築されています。
+こんにちは、Shooonです！今回は、Manus AIの手助けを借りながら、モダンなブログを構築してみました。このブログは、AstroというモダンなウェブフレームワークとmicroCMSというヘッドレスCMSを組み合わせて構築されています。
 
 ### 驚きのスピード！AstroとCloudflare Pagesの組み合わせ
 

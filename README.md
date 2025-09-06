@@ -14,6 +14,7 @@ Features:
 - ✅ Sitemap support
 - ✅ RSS Feed support
 - ✅ Markdown & MDX support
+- ✅ microCMS integration ready
 
 ## 🚀 Project Structure
 
@@ -52,6 +53,31 @@ All commands are run from the root of the project, from a terminal:
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
+
+## 📝 microCMS Integration
+
+このプロジェクトはmicroCMSとの連携に対応しています。
+
+### Setup
+
+1. `.env.example`を`.env`にコピーしてください
+2. microCMSのサービスドメインとAPIキーを設定してください：
+
+```
+MICROCMS_SERVICE_DOMAIN=your-service-domain
+MICROCMS_API_KEY=your-api-key
+```
+
+### Usage
+
+- `/cms-blog/` - microCMSで管理されているブログ記事一覧
+- `src/lib/microcms.ts` - microCMS連携用のライブラリ
+
+microCMSでは`blogs`というエンドポイントを作成し、以下のフィールドを設定してください：
+- title (テキスト)
+- content (リッチエディタ)
+- eyecatch (画像・任意)
+- category (参照・任意)
 
 ## 👀 Want to learn more?
 

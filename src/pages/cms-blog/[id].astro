@@ -1,0 +1,109 @@
+---
+import { getBlogDetail, getBlogs, client, type Blog } from '../../lib/microcms';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+export async function getStaticPaths() {
+  if (!client) return [];
+  
+  const response = await getBlogs();
+  return response.contents.map((post: Blog) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { id } = Astro.params;
+
+let blogPost = post;
+if (!blogPost && client) {
+  try {
+    blogPost = await getBlogDetail(id as string);
+  } catch (error) {
+    console.error('記事の取得に失敗しました:', error);
+  }
+}
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <BaseHead title={blogPost?.title || 'Not Found'} description={blogPost?.title || ''} />
+    <style>
+      .article {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      .article-header {
+        margin-bottom: 2rem;
+      }
+      .article-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #333;
+      }
+      .article-meta {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+      .article-eyecatch {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+      .article-content {
+        line-height: 1.8;
+        color: #333;
+      }
+      .article-content h1 { font-size: 1.8rem; margin: 2rem 0 1rem; }
+      .article-content h2 { font-size: 1.5rem; margin: 1.5rem 0 1rem; }
+      .article-content p { margin: 1rem 0; }
+      .category {
+        background: #007acc;
+        color: white;
+        padding: 0.2rem 0.8rem;
+        border-radius: 1rem;
+        font-size: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      {blogPost ? (
+        <article class="article">
+          <div class="article-header">
+            <h1 class="article-title">{blogPost.title}</h1>
+            <div class="article-meta">
+              <time>{new Date(blogPost.publishedAt).toLocaleDateString('ja-JP')}</time>
+              {blogPost.category && (
+                <span class="category">{blogPost.category.name}</span>
+              )}
+            </div>
+            {blogPost.eyecatch && (
+              <img 
+                src={blogPost.eyecatch.url} 
+                alt={blogPost.title}
+                class="article-eyecatch"
+              />
+            )}
+          </div>
+          <div class="article-content" set:html={blogPost.content} />
+        </article>
+      ) : (
+        <div style="text-align: center; padding: 4rem 2rem;">
+          <h1>記事が見つかりません</h1>
+          <p><a href="/cms-blog/">← ブログ一覧に戻る</a></p>
+        </div>
+      )}
+    </main>
+    <Footer />
+  </body>
+</html>
