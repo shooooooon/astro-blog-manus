@@ -1,23 +1,14 @@
 ---
-import { getBlogs, type Blog, client } from '../lib/microcms';
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
-let posts: Blog[] = [];
-let errorMessage = '';
-
-try {
-  if (!client) {
-    throw new Error('microCMSクライアントの設定ができていません。環境変数を確認してください。');
-  }
-  const response = await getBlogs();
-  posts = response.contents;
-} catch (error) {
-  console.error('microCMSからのデータ取得に失敗しました:', error);
-  errorMessage = error instanceof Error ? error.message : 'Unknown error';
-}
+const posts = (await getCollection('blog'))
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5); // 最新5件を表示
 ---
 
 <!doctype html>
@@ -49,7 +40,7 @@ try {
       .posts-list {
         display: flex;
         flex-direction: column;
-        gap: 3rem;
+        gap: 2rem;
       }
       
       .post-card {
@@ -57,72 +48,72 @@ try {
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        color: inherit;
       }
       
       .post-card:hover {
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
       
-      .post-card a {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-      }
-      
-      .eyecatch {
+      .post-image {
         width: 100%;
-        height: 240px;
+        height: 200px;
         object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       }
       
-      .post-content-wrapper {
-        padding: 2rem;
+      .post-content {
+        padding: 1.5rem;
       }
       
       .post-title {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: 1.3rem;
+        font-weight: 600;
         color: #1a1a1a;
-        margin-bottom: 0.75rem;
-        line-height: 1.3;
-        letter-spacing: -0.01em;
-      }
-      
-      .post-meta {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-        font-size: 0.9rem;
-        color: #64748b;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
       }
       
       .post-date {
-        font-weight: 500;
-      }
-      
-      .post-excerpt {
-        color: #4b5563;
-        line-height: 1.7;
-        font-size: 1rem;
-      }
-      
-      .no-posts {
-        text-align: center;
         color: #64748b;
-        margin-top: 4rem;
-        padding: 3rem;
-        background: white;
-        border-radius: 12px;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
       }
       
-      .no-posts p {
+      .post-description {
+        color: #374151;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      
+      .view-all {
+        text-align: center;
+        margin-top: 3rem;
+      }
+      
+      .view-all-link {
+        display: inline-block;
+        background: #4f46e5;
+        color: white;
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.2s ease;
+      }
+      
+      .view-all-link:hover {
+        background: #3730a3;
+      }
+      
+      .intro {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #64748b;
         font-size: 1.1rem;
-        margin: 0;
       }
       
       @media (max-width: 768px) {
@@ -132,23 +123,10 @@ try {
         
         .page-title {
           font-size: 2rem;
-          margin-bottom: 2rem;
         }
         
-        .posts-list {
-          gap: 2rem;
-        }
-        
-        .post-content-wrapper {
-          padding: 1.5rem;
-        }
-        
-        .post-title {
-          font-size: 1.25rem;
-        }
-        
-        .eyecatch {
-          height: 200px;
+        .post-content {
+          padding: 1.2rem;
         }
       }
     </style>
@@ -156,48 +134,45 @@ try {
   <body>
     <Header />
     <main>
-      <h1 class="page-title">ブログ</h1>
+      <h1 class="page-title">Shooonのブログ</h1>
+      <p class="intro">
+        AI技術やプログラミング、日々の学びについて書いています。
+      </p>
       
-      {posts.length === 0 ? (
-        <div class="no-posts">
-          <p>記事を準備中です。しばらくお待ちください。</p>
-        </div>
-      ) : (
+      {posts.length > 0 ? (
         <div class="posts-list">
           {posts.map((post) => (
-            <article class="post-card">
-              <a href={`/cms-blog/${post.id}`}>
-                {post.eyecatch && (
-                  <img 
-                    src={post.eyecatch.url} 
-                    alt={post.title}
-                    class="eyecatch"
-                  />
-                )}
-                <div class="post-content-wrapper">
-                  <h2 class="post-title">{post.title}</h2>
-                  <div class="post-meta">
-                    <time class="post-date">
-                      {new Date(post.publishedAt).toLocaleDateString('ja-JP', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </time>
-                    {post.category && (
-                      <span class="post-category">{post.category.name}</span>
-                    )}
-                  </div>
-                  <div class="post-excerpt">
-                    <p>{post.content.replace(/<[^>]*>/g, '').substring(0, 120)}...</p>
-                  </div>
+            <a href={`/blog/${post.slug}/`} class="post-card">
+              {post.data.heroImage && (
+                <img src={post.data.heroImage} alt="" class="post-image" />
+              )}
+              <div class="post-content">
+                <h2 class="post-title">{post.data.title}</h2>
+                <div class="post-date">
+                  {post.data.pubDate.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
                 </div>
-              </a>
-            </article>
+                <p class="post-description">{post.data.description}</p>
+              </div>
+            </a>
           ))}
+        </div>
+      ) : (
+        <div style="text-align: center; color: #64748b; margin: 3rem 0;">
+          <p>記事がまだありません。</p>
+        </div>
+      )}
+      
+      {posts.length > 0 && (
+        <div class="view-all">
+          <a href="/blog/" class="view-all-link">すべての記事を見る</a>
         </div>
       )}
     </main>
     <Footer />
   </body>
 </html>
+
