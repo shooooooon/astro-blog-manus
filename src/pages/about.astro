@@ -1,0 +1,120 @@
+
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead title={`About | ${SITE_TITLE}`} description="Shooonについて" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					<img width={1020} height={510} src="/images/about-hero.jpg" alt="About Shooon" />
+				</div>
+				<div class="prose">
+					<div class="title">
+						<h1>About SHooon</h1>
+						<p>このブログについて</p>
+					</div>
+					
+					<div class="content">
+						
+						<p>
+							はじめまして、<strong>SHooon</strong>です！<br>
+							AIの力を借りて、普段使いのメモ帳をブログにしてみました。
+						</p>
+
+						<p>
+							正直に言うと、PCやネットはあまり得意ではありません。<br>
+							このブログも、ほとんど手作業で作成しています。
+						</p>
+
+						<p>
+							でも、<strong>Manus AI</strong>という相棒ができて、<br>
+							少しずつ自動化を進めているところです。
+						</p>
+
+						<hr>
+
+						<h2>このブログの目的</h2>
+
+						<p>
+							このブログでは、日々の学びや気づきを記録しています。<br>
+							AIと一緒に、どこまで成長できるか、挑戦の過程を共有できれば嬉しいです。
+						</p>
+					</div>
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: calc(100% - 2em);
+		max-width: 100%;
+		margin: 0;
+	}
+	.hero-image {
+		width: 100%;
+		margin-bottom: 2rem;
+	}
+	.hero-image img {
+		display: block;
+		margin: 0 auto;
+		border-radius: 12px;
+		box-shadow: var(--box-shadow);
+	}
+	.prose {
+		width: 720px;
+		max-width: calc(100% - 2em);
+		margin: auto;
+		padding: 1em;
+		color: rgb(var(--gray-dark));
+	}
+	.title {
+		margin-bottom: 1em;
+		padding: 1em 0;
+		text-align: center;
+		line-height: 1;
+	}
+	.title h1 {
+		margin: 0 0 0.5em 0;
+	}
+	.content {
+		line-height: 1.6;
+	}
+	.content h2 {
+		margin-top: 2rem;
+		margin-bottom: 1rem;
+		color: rgb(var(--black));
+	}
+	.content ul {
+		margin: 1rem 0;
+		padding-left: 2rem;
+	}
+	.content li {
+		margin-bottom: 0.5rem;
+	}
+	.content a {
+		color: rgb(var(--accent));
+		text-decoration: none;
+	}
+	.content a:hover {
+		text-decoration: underline;
+	}
+	.content hr {
+		margin: 2rem 0;
+		border: none;
+		border-top: 1px solid rgb(var(--gray-light));
+	}
+</style>
+
